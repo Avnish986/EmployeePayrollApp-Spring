@@ -1,6 +1,5 @@
 package com.details.employeepayrollapp.service;
 
-
 import java.util.List;
 
 import com.details.employeepayrollapp.dto.EmployeePayrollDTO;
@@ -13,7 +12,7 @@ public interface IEmployeePayrollService {
 
 	EmployeePayrollData createEmployeePayrollData(EmployeePayrollDTO empPayrollDTO);
 
-	EmployeePayrollData updateEmployeePayrollData(EmployeePayrollDTO empPayrollDTO);
+	EmployeePayrollData updateEmployeePayrollData(int empId, EmployeePayrollDTO empPayrollDTO);
 
 	void deleteEmployeePayrollData(int empId);
 }
