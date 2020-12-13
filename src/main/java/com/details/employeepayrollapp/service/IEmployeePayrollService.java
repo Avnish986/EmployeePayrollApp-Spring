@@ -2,17 +2,22 @@ package com.details.employeepayrollapp.service;
 
 import java.util.List;
 
+import com.details.employeepayrollapp.model.*;
 import com.details.employeepayrollapp.dto.EmployeePayrollDTO;
+import com.details.employeepayrollapp.dto.User;
+import com.details.employeepayrollapp.exception.EmpPayrollException;
 import com.details.employeepayrollapp.model.EmployeePayrollData;
 
 public interface IEmployeePayrollService {
-	List<EmployeePayrollData> getEmployeePayrollData();
 
-	EmployeePayrollData getEmployeePayrollDataById(int empId);
+	User CreateUser(User user) throws EmpPayrollException;
 
-	EmployeePayrollData createEmployeePayrollData(EmployeePayrollDTO empPayrollDTO);
+	User UpdateUser(User user) throws EmpPayrollException;
 
-	EmployeePayrollData updateEmployeePayrollData(int empId, EmployeePayrollDTO empPayrollDTO);
+	User deleteUser(Long id) throws EmpPayrollException;
 
-	void deleteEmployeePayrollData(int empId);
+	List<User> getAllUser();
+	
+	User getUserById(Long id) throws EmpPayrollException;
+
 }
