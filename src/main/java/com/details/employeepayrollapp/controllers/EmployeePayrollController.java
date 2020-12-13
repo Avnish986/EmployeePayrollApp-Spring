@@ -16,53 +16,59 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.details.employeepayrollapp.dto.EmployeePayrollDTO;
 import com.details.employeepayrollapp.dto.ResponseDTO;
+import com.details.employeepayrollapp.dto.User;
+import com.details.employeepayrollapp.exception.EmpPayrollException;
 import com.details.employeepayrollapp.model.EmployeePayrollData;
 import com.details.employeepayrollapp.service.IEmployeePayrollService;
 
 @RestController
-@RequestMapping("/employeepayrollservice")
 public class EmployeePayrollController {
+
 	@Autowired
-	private IEmployeePayrollService employeePayrollService;
-
-	@RequestMapping(value = { "", "/", "/get" })
-	public ResponseEntity<ResponseDTO> getEmployeePayrollData() {
-		List<EmployeePayrollData> empDataList = null;
-		empDataList = employeePayrollService.getEmployeePayrollData();
-		ResponseDTO respDTO = new ResponseDTO("Get call for Success ", empDataList);
-		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
-	}
-
-	@GetMapping("/get/{empId}")
-	public ResponseEntity<ResponseDTO> getEmployeePayrollData(@PathVariable("empId") int empId) {
-		EmployeePayrollData empData =null;
-		empData =employeePayrollService.getEmployeePayrollDataById(empId);
-		ResponseDTO respDTO = new ResponseDTO("Get Call success for ID  ", empData);
-		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
-	}
+	private IEmployeePayrollService empPayrollService;
 
 	@PostMapping("/create")
-	public ResponseEntity<ResponseDTO> addEmployeePayrollData(@RequestBody EmployeePayrollDTO empPayrollDTO) {
-		EmployeePayrollData empData=null;
-		empData =employeePayrollService.createEmployeePayrollData(empPayrollDTO);
-		ResponseDTO respDTO = new ResponseDTO("Created EmployeePayroll Data Success", empData);
-		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
+	public ResponseEntity<User> createUser(@RequestBody User user) {
+		try {
+			return ResponseEntity.status(HttpStatus.CREATED).body(empPayrollService.CreateUser(user));
+		} catch (EmpPayrollException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<ResponseDTO> updateEmployeePayrollData(@PathVariable("empId") int empId,@RequestBody EmployeePayrollDTO empPayrollDTO) {
-		EmployeePayrollData empData=null;
-		empData =employeePayrollService.updateEmployeePayrollData(empId,empPayrollDTO);
-		ResponseDTO respDTO = new ResponseDTO("Updated EmployeePayroll Data Success  ", empData);
-		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
+	public ResponseEntity<User> updateUser(@RequestBody User user) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(empPayrollService.UpdateUser(user));
+		} catch (EmpPayrollException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
 	}
 
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<User> deleteUser(@PathVariable("id") Long id) {
+		try {
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(empPayrollService.deleteUser(id));
+		} catch (EmpPayrollException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+	}
+
+	@GetMapping("/get")
+	public ResponseEntity<List<User>> getAllUser() {
+		try {
+		return ResponseEntity.status(HttpStatus.OK).body(empPayrollService.getAllUser());
+		}catch(Exception e) {
+			 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 	
-	@DeleteMapping
-	public ResponseEntity<ResponseDTO> deleteEmployeePayrollData(@PathVariable("empId") int empId) {
-		employeePayrollService.deleteEmployeePayrollData(empId);
-		ResponseDTO respDTO = new ResponseDTO("Deleted Successfully", "Deleted Id " + empId);
-		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
+	@GetMapping("/get/{id}")
+	public ResponseEntity<User> getUserById(@PathVariable("id") Long id){
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(empPayrollService.getUserById(id));
+			}catch(Exception e) {
+				 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			}
 	}
-
 }
